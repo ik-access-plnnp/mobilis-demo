@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MOBILIS — Mobility Interest & Talent Information System</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --page: light-dark(#f3f6fb, #101923);
+  --surface: light-dark(#ffffff, #182431);
+  --surface-soft: light-dark(#f7f9fc, #1e2d3b);
+  --text: light-dark(#14283f, #edf5fb);
+  --muted: light-dark(#6e8093, #a6b7c8);
+  --line: light-dark(#e1e8f0, #304252);
+  --blue: light-dark(#07558f, #5aa9e8);
+  --blue-dark: light-dark(#063d68, #2574ac);
+  --teal: light-dark(#0d9488, #42c8bb);
+  --yellow: light-dark(#e7a62b, #f0be57);
+  --green-bg: light-dark(#e2f7ec, #1d4138);
+  --green-text: light-dark(#167249, #78dbad);
+  --amber-bg: light-dark(#fff3d9, #493a20);
+  --amber-text: light-dark(#94620d, #ffcf68);
+  --red-bg: light-dark(#ffebeb, #4a282b);
+  --red-text: light-dark(#a43b3b, #ff9b9b);
+  --shadow: 0 8px 28px rgba(16, 42, 67, .06);
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; background: var(--page); color: var(--text); }
+#app { min-height: 100vh; width: 100%; background: var(--page); border-radius: 0; }
+.topbar { background: var(--surface); border-bottom: 1px solid var(--line); padding: 16px 26px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.brand-wrap { display:flex; align-items:center; gap:12px; }
+.brand-mark { height:43px; width:43px; border-radius:13px; display:grid; place-items:center; color:white; font-weight:900; font-size:18px; background:linear-gradient(135deg,#07558f,#0d9488); box-shadow:0 7px 15px #07558f2b; }
+.brand { font-size:23px; font-weight:850; letter-spacing:1.3px; line-height:1; }
+.brand-sub { color:var(--muted); font-size:11px; margin-top:5px; }
+.top-right { display:flex; align-items:center; gap:12px; }
+.demo-pill { border:1px solid light-dark(#f0d89f,#6f5829); color:var(--amber-text); background:var(--amber-bg); padding:7px 10px; border-radius:20px; font-size:10px; font-weight:800; letter-spacing:.5px; }
+.user-chip { display:flex; align-items:center; gap:9px; font-size:12px; color:var(--muted); }
+.avatar { background:light-dark(#e4f0fb,#29465e); color:var(--blue); width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:800; }
+.shell { min-height:calc(100vh - 76px); display:grid; grid-template-columns:236px minmax(0,1fr); }
+aside { padding:22px 14px; background:var(--surface); border-right:1px solid var(--line); }
+.nav-label { padding:5px 10px 12px; color:var(--muted); text-transform:uppercase; letter-spacing:1.2px; font-size:10px; font-weight:800; }
+.nav-btn { width:100%; display:flex; align-items:center; gap:11px; border:0; background:transparent; color:var(--muted); font:inherit; font-size:13px; font-weight:700; cursor:pointer; text-align:left; padding:12px 13px; border-radius:10px; margin-bottom:5px; }
+.nav-btn .ico { width:22px; text-align:center; font-size:17px; }
+.nav-btn.active { color:var(--blue); background:light-dark(#eaf4fc,#203b50); }
+.nav-foot { border-top:1px solid var(--line); margin:28px 8px 0; padding-top:17px; font-size:11px; line-height:1.6; color:var(--muted); }
+main { padding:28px clamp(17px,3vw,40px) 44px; min-width:0; max-width:1600px; width:100%; }
+.page { display:none; animation:fadeIn .16s ease-out; }
+.page.active { display:block; }
+@keyframes fadeIn { from {opacity:.55; transform:translateY(3px)} to {opacity:1; transform:none} }
+.page-head { display:flex; justify-content:space-between; gap:15px; align-items:flex-start; margin-bottom:23px; }
+h1 { margin:0 0 7px; font-size:clamp(23px,2.2vw,30px); letter-spacing:-.6px; }
+.subtitle { color:var(--muted); font-size:13px; line-height:1.6; max-width:760px; }
+.eyebrow { color:var(--teal); font-weight:850; font-size:10px; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
+.btn { cursor:pointer; padding:10px 14px; font-size:12px; font-weight:750; border:1px solid transparent; border-radius:9px; background:var(--blue); color:white; box-shadow:0 5px 12px #07558f1c; }
+.btn:hover { filter:brightness(1.06); }
+.btn.secondary { color:var(--blue); background:var(--surface); border-color:var(--line); box-shadow:none; }
+.btn.ghost { background:transparent; color:var(--muted); border-color:var(--line); box-shadow:none; }
+.kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:18px; }
+.kpi { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:18px; box-shadow:var(--shadow); min-width:0; }
+.kpi-top { display:flex; align-items:center; justify-content:space-between; gap:8px; color:var(--muted); font-size:11px; font-weight:700; }
+.kpi-icon { width:33px;height:33px;border-radius:10px;display:grid;place-items:center;background:light-dark(#eaf4fc,#20394d);font-size:16px; }
+.kpi-num { font-size:30px; font-weight:850; letter-spacing:-1px; margin-top:12px; }
+.kpi-note { font-size:10px; color:var(--muted); margin-top:3px; }
+.panel { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:21px; margin-bottom:17px; box-shadow:var(--shadow); min-width:0; }
+.panel-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:17px; }
+h2 { font-size:15px; margin:0 0 5px; letter-spacing:-.2px; }
+.panel-desc { color:var(--muted); font-size:11px; line-height:1.5; }
+.two-col { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:17px; }
+.three-col { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.bar-row { margin:14px 0; }
+.bar-head { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:12px; margin-bottom:7px; }
+.bar-head span { color:var(--muted); }
+.bar { height:8px; border-radius:10px; overflow:hidden; background:var(--line); }
+.bar-fill { height:100%; border-radius:10px; background:linear-gradient(90deg,var(--blue),var(--teal)); }
+.status { display:inline-flex; align-items:center; gap:6px; border-radius:20px; padding:6px 9px; font-size:10px; font-weight:850; white-space:nowrap; }
+.status.ready { background:var(--green-bg); color:var(--green-text); }
+.status.consider { background:var(--amber-bg); color:var(--amber-text); }
+.status.notready { background:var(--red-bg); color:var(--red-text); }
+.status::before { content:""; width:5px;height:5px;border-radius:50%;background:currentColor; }
+.insight { display:flex; gap:13px; padding:15px; border:1px solid light-dark(#cce3f5,#2e536e); background:light-dark(#f1f8fe,#1b2e3b); border-radius:11px; }
+.insight-icon { flex:0 0 34px; height:34px; display:grid;place-items:center;border-radius:10px;background:light-dark(#dceefa,#244c66); }
+.insight strong { display:block; font-size:12px; margin-bottom:4px; }
+.insight p { margin:0; color:var(--muted); font-size:11px; line-height:1.6; }
+.table-wrap { overflow:auto; width:100%; }
+table { width:100%; min-width:630px; border-collapse:collapse; font-size:12px; }
+th { text-align:left; color:var(--muted); background:var(--surface-soft); font-size:10px; text-transform:uppercase; letter-spacing:.65px; font-weight:800; }
+th,td { padding:12px 13px; border-bottom:1px solid var(--line); }
+tbody tr:last-child td { border-bottom:0; }
+td { color:var(--text); }
+.person { display:flex; align-items:center; gap:9px; font-weight:750; }
+.person-avatar { width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:light-dark(#edf3f8,#293c4d);font-size:10px;color:var(--blue);font-weight:900;flex-shrink:0; }
+.score { color:var(--blue); font-weight:850; }
+.tag-small { font-size:10px; color:var(--muted); }
+.form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:17px; }
+.field.full { grid-column:1/-1; }
+.field label { display:block; font-size:11px; font-weight:800; margin-bottom:7px; }
+.hint { color:var(--muted); font-size:10px; line-height:1.5; margin-top:6px; }
+input[type=text],select,textarea { width:100%; font:inherit; font-size:12px; padding:11px 12px; border:1px solid var(--line); border-radius:9px; background:var(--surface); color:var(--text); outline:none; }
+input:focus,select:focus,textarea:focus { border-color:var(--blue); box-shadow:0 0 0 3px light-dark(#07558f17,#5aa9e829); }
+textarea { min-height:76px; resize:vertical; }
+.choice-list { display:flex; flex-wrap:wrap; gap:8px; }
+.choice { padding:9px 12px; font-size:11px; border:1px solid var(--line); color:var(--muted); background:var(--surface); border-radius:20px; cursor:pointer; user-select:none; }
+.choice.selected { border-color:var(--blue); color:var(--blue); background:light-dark(#eaf4fc,#203b50); font-weight:800; }
+.form-actions { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-top:20px; padding-top:16px; border-top:1px solid var(--line); }
+.saved-msg { font-size:11px; color:var(--green-text); font-weight:750; display:none; }
+.map-grid { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(240px,.8fr); gap:17px; }
+.region-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.region-card { border:1px solid var(--line); background:var(--surface); border-radius:11px; padding:13px; }
+.region-card .region-name { font-size:12px; font-weight:800; }
+.region-count { margin-top:8px; font-size:22px; font-weight:850; }
+.region-foot { font-size:10px; color:var(--muted); margin-top:2px; }
+.match-controls { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:13px; align-items:end; }
+.match-summary { display:flex; align-items:center; gap:10px; background:var(--surface-soft); border:1px solid var(--line); padding:13px; border-radius:10px; margin-bottom:15px; font-size:11px; color:var(--muted); }
+.match-summary b { color:var(--text); }
+.footer-note { margin-top:20px; font-size:10px; line-height:1.6; color:var(--muted); }
+.mobile-nav { display:none; }
+@media(max-width:1000px) { .shell { grid-template-columns:190px minmax(0,1fr); } main { padding:24px 20px; } .kpis { grid-template-columns:repeat(2,minmax(0,1fr)); } .two-col,.map-grid { grid-template-columns:1fr; } }
+@media(max-width:680px) { .topbar { padding:13px 15px; } .brand { font-size:20px; } .brand-sub { max-width:220px; font-size:9px; } .demo-pill { font-size:9px; } .user-chip .user-text { display:none; } .shell { display:block; } aside { display:none; } .mobile-nav { display:flex; gap:6px; overflow:auto; padding:8px 12px; background:var(--surface); border-bottom:1px solid var(--line); } .mobile-nav button { white-space:nowrap; border:0; border-radius:8px; padding:9px 11px; background:transparent; color:var(--muted); font-weight:750; font-size:11px; } .mobile-nav button.active { color:var(--blue); background:light-dark(#eaf4fc,#203b50); } main { padding:21px 13px 32px; } .page-head { flex-direction:column; } .kpis { gap:9px; } .kpi { padding:14px; } .kpi-num { font-size:25px; } .panel { padding:16px; } .form-grid,.match-controls { grid-template-columns:1fr; } .field.full { grid-column:auto; } .three-col { grid-template-columns:1fr; } .region-list { grid-template-columns:1fr 1fr; } .user-chip { display:none; } }
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand-wrap"><div class="brand-mark">M</div><div><div class="brand">MOBILIS</div><div class="brand-sub">Mobility Interest &amp; Talent Information System</div></div></div>
+    <div class="top-right"><div class="demo-pill">DEMO • DATA FIKTIF</div><div class="user-chip"><div class="avatar">HR</div><div class="user-text">Preview Workspace<br><b style="color:var(--text)">Mode demonstrasi</b></div></div></div>
+  </header>
+  <div class="mobile-nav" id="mobileNav">
+    <button class="active" data-page="dashboard">▦ Dashboard</button><button data-page="profile">♙ My Profile</button><button data-page="mobility">⌖ Mobility Map</button><button data-page="matching">◎ Talent Matching</button>
+  </div>
+  <div class="shell">
+    <aside>
+      <div class="nav-label">Workspace</div>
+      <button class="nav-btn active" data-page="dashboard"><span class="ico">▦</span> Management Dashboard</button>
+      <button class="nav-btn" data-page="profile"><span class="ico">♙</span> My Mobility Profile</button>
+      <button class="nav-btn" data-page="mobility"><span class="ico">⌖</span> Mobility Preference Map</button>
+      <button class="nav-btn" data-page="matching"><span class="ico">◎</span> Talent Matching</button>
+      <div class="nav-foot"><b style="color:var(--text)">MOBILIS</b><br>Know Where Talent Wants to Grow.<br><br><span class="status consider">Prototype / Demo</span></div>
+    </aside>
+    <main>
+      <section id="dashboard" class="page active">
+        <div class="page-head"><div><div class="eyebrow">Talent intelligence</div><h1>Management Dashboard</h1><div class="subtitle">Ringkasan preferensi mobilitas dan aspirasi karier untuk mendukung proses talent management berbasis data.</div></div><button class="btn secondary" onclick="navigate('profile')">＋ Perbarui Mobility Profile</button></div>
+        <div class="kpis">
+          <div class="kpi"><div class="kpi-top"><span>Total Talent (Demo)</span><span class="kpi-icon">♙</span></div><div class="kpi-num">342</div><div class="kpi-note">Data contoh untuk visualisasi</div></div>
+          <div class="kpi"><div class="kpi-top"><span>Ready</span><span class="kpi-icon">✓</span></div><div class="kpi-num">84</div><div class="kpi-note"><span class="status ready">Siap mengikuti proses</span></div></div>
+          <div class="kpi"><div class="kpi-top"><span>Consider</span><span class="kpi-icon">◷</span></div><div class="kpi-num">151</div><div class="kpi-note"><span class="status consider">Perlu engagement</span></div></div>
+          <div class="kpi"><div class="kpi-top"><span>Not Ready</span><span class="kpi-icon">↗</span></div><div class="kpi-num">107</div><div class="kpi-note"><span class="status notready">Belum siap saat ini</span></div></div>
+        </div>
+        <div class="two-col">
+          <div class="panel"><div class="panel-head"><div><h2>Area dengan Minat Tertinggi</h2><div class="panel-desc">Preferensi area berdasarkan data ilustratif</div></div><span class="tag-small">Top 5</span></div>
+            <div class="bar-row"><div class="bar-head"><span>Jawa Timur</span><b>218</b></div><div class="bar"><div class="bar-fill" style="width:87%"></div></div></div>
+            <div class="bar-row"><div class="bar-head"><span>Jawa Tengah</span><b>112</b></div><div class="bar"><div class="bar-fill" style="width:45%"></div></div></div>
+            <div class="bar-row"><div class="bar-head"><span>Jawa Barat</span><b>88</b></div><div class="bar"><div class="bar-fill" style="width:35%"></div></div></div>
+            <div class="bar-row"><div class="bar-head"><span>DKI Jakarta</span><b>64</b></div><div class="bar"><div class="bar-fill" style="width:26%"></div></div></div>
+            <div class="bar-row"><div class="bar-head"><span>Kalimantan</span><b>28</b></div><div class="bar"><div class="bar-fill" style="width:11%"></div></div></div>
+          </div>
+          <div class="panel"><div class="panel-head"><div><h2>Minat Bidang Karier</h2><div class="panel-desc">Jumlah pilihan bidang (data ilustratif)</div></div></div>
+            <div class="bar-row"><div class="bar-head"><span>Operasi</span><b>176</b></div><div class="bar"><div class="bar-fill" style="width:82%"></div></div></div>
+            <div class="bar-row"><div class="bar-head"><span>Maintenance</span><b>142</b></div><div class="bar"><div class="bar-fill" style="width:66%"></div></div></div>
+            <div class="bar-row"><div class="bar-head"><span>Engineering</span><b>118</b></div><div class="bar"><div class="bar-fill" style="width:55%"></div></div></div>
+            <div class="bar-row"><div class="bar-head"><span>Leadership</span><b>96</b></div><div class="bar"><div class="bar-fill" style="width:45%"></div></div></div>
+            <div class="bar-row"><div class="bar-head"><span>Planning</span><b>74</b></div><div class="bar"><div class="bar-fill" style="width:31%"></div></div></div>
+          </div>
+        </div>
+        <div class="panel"><div class="panel-head"><div><h2>Management Insight</h2><div class="panel-desc">Prinsip utama MOBILIS</div></div><span class="status ready">Confirm Before Nominate</span></div>
+          <div class="insight"><div class="insight-icon">✦</div><div><strong>Eligible + Interested + Ready</strong><p>Gunakan data kompetensi, minat, dan kesiapan sebagai bahan konfirmasi sebelum nominasi. MOBILIS membantu menyiapkan candidate pool; keputusan mutasi/promosi tetap berada pada manajemen yang berwenang.</p></div></div>
+        </div>
+      </section>
+
+      <section id="profile" class="page">
+        <div class="page-head"><div><div class="eyebrow">Employee portal</div><h1>My Mobility Profile</h1><div class="subtitle">Sampaikan preferensi mobilitas dan aspirasi karier Anda. Isi berikut hanya tersimpan sementara di sesi demo ini.</div></div><span class="status consider">Demo • Tidak tersimpan ke server</span></div>
+        <div class="panel"><div class="panel-head"><div><h2>Profil Dasar</h2><div class="panel-desc">Gunakan identitas dummy untuk mencoba form.</div></div></div>
+          <div class="form-grid">
+            <div class="field"><label for="employeeName">Nama tampilan</label><input id="employeeName" type="text" value="Demo Employee" maxlength="80"></div>
+            <div class="field"><label for="employeeFunction">Fungsi saat ini</label><select id="employeeFunction"><option>Operasi</option><option>Maintenance</option><option>Engineering</option><option>Instrumentation &amp; Control</option><option>Planning</option><option>Support</option></select></div>
+            <div class="field"><label for="readiness">Mobility Readiness</label><select id="readiness"><option value="Ready">Ready — Bersedia mengikuti proses</option><option value="Consider" selected>Consider — Bersedia dengan pertimbangan</option><option value="Not Ready">Not Ready — Belum siap saat ini</option></select><div class="hint">Status ini bukan keputusan final dan dapat diperbarui saat kondisi berubah.</div></div>
+            <div class="field"><label for="horizon">Horizon pengembangan</label><select id="horizon"><option>1–2 tahun</option><option selected>3–5 tahun</option><option>Lebih dari 5 tahun</option></select></div>
+            <div class="field full"><label>Preferensi Area (pilih satu atau beberapa)</label><div class="choice-list" data-group="areas"><button class="choice selected" type="button">Jawa Timur</button><button class="choice selected" type="button">Surabaya</button><button class="choice" type="button">Jawa Tengah</button><button class="choice" type="button">Jawa Barat</button><button class="choice" type="button">DKI Jakarta</button><button class="choice" type="button">Kalimantan</button><button class="choice" type="button">Sulawesi</button><button class="choice" type="button">Bali &amp; Nusa Tenggara</button><button class="choice" type="button">Maluku &amp; Papua</button></div><div class="hint">Preferensi menjadi bahan pertimbangan; bukan jaminan penempatan sesuai pilihan.</div></div>
+            <div class="field full"><label>Career Interest (pilih satu atau beberapa)</label><div class="choice-list" data-group="careers"><button class="choice selected" type="button">Operasi</button><button class="choice" type="button">Maintenance</button><button class="choice selected" type="button">Electrical</button><button class="choice" type="button">Engineering</button><button class="choice" type="button">Instrumentation &amp; Control</button><button class="choice" type="button">Planning</button><button class="choice" type="button">Leadership / Management</button><button class="choice" type="button">Technical Specialist</button></div></div>
+            <div class="field"><label for="aspiration">Aspirasi karier</label><select id="aspiration"><option>Technical Specialist</option><option>Supervisor / Leader</option><option>Management</option><option>Cross Function</option><option>Memperdalam bidang saat ini</option></select></div>
+            <div class="field"><label for="profileNote">Catatan (opsional)</label><input type="text" id="profileNote" maxlength="160" placeholder="Misal: tertarik penugasan bidang operasi"></div>
+          </div>
+          <div class="form-actions"><span id="savedMsg" class="saved-msg">✓ Profile diperbarui untuk sesi demo ini.</span><div style="display:flex;gap:9px"><button class="btn ghost" id="resetProfile" type="button">Reset contoh</button><button class="btn" id="saveProfile" type="button">Simpan Mobility Profile</button></div></div>
+        </div>
+      </section>
+
+      <section id="mobility" class="page">
+        <div class="page-head"><div><div class="eyebrow">Preference analytics</div><h1>Mobility Preference Map</h1><div class="subtitle">Ringkasan minat lokasi pada data contoh. Angka tidak merepresentasikan jumlah karyawan aktual PLN NP UP Gresik.</div></div></div>
+        <div class="map-grid"><div class="panel"><div class="panel-head"><div><h2>Distribusi Preferensi Area</h2><div class="panel-desc">Pilih area untuk melihat ringkasan.</div></div></div><div class="region-list" id="regionList"></div></div>
+          <div class="panel"><div class="panel-head"><div><h2>Area terpilih</h2><div class="panel-desc">Ringkasan minat</div></div></div><div id="regionDetail"><div class="kpi-icon" style="width:42px;height:42px;margin-bottom:12px">⌖</div><h2 style="font-size:21px;margin-bottom:8px">Jawa Timur</h2><div style="font-size:32px;font-weight:850">218</div><p class="panel-desc">pilihan preferensi ilustratif</p><div class="bar" style="margin-top:18px"><div class="bar-fill" style="width:87%"></div></div><p class="panel-desc" style="margin-top:14px">Insight: area dengan pilihan tertinggi dalam dataset demo.</p></div></div>
+        </div>
+      </section>
+
+      <section id="matching" class="page">
+        <div class="page-head"><div><div class="eyebrow">Decision support</div><h1>Talent Matching</h1><div class="subtitle">Simulasi pencarian candidate pool berdasarkan fungsi, area preferensi, dan readiness. Skor adalah ilustrasi, bukan hasil penilaian resmi.</div></div><span class="status consider">Human decision required</span></div>
+        <div class="panel"><div class="panel-head"><div><h2>Parameter kebutuhan posisi</h2><div class="panel-desc">Pilih parameter lalu jalankan simulasi matching.</div></div></div>
+          <div class="match-controls"><div class="field"><label for="positionFunction">Fungsi / bidang posisi</label><select id="positionFunction"><option>Operasi</option><option>Maintenance</option><option>Electrical</option><option>Engineering</option><option>Instrumentation &amp; Control</option><option>Planning</option></select></div><div class="field"><label for="positionArea">Area penempatan</label><select id="positionArea"><option>Jawa Timur</option><option>Jawa Tengah</option><option>Jawa Barat</option><option>DKI Jakarta</option><option>Kalimantan</option><option>Sulawesi</option></select></div><div><button class="btn" id="runMatching" style="width:100%">◎ Cari Candidate Pool</button></div></div>
+        </div>
+        <div class="panel"><div class="panel-head"><div><h2>Recommended Candidate Pool</h2><div class="panel-desc" id="matchCaption">Hasil contoh simulasi.</div></div><span class="status ready" id="matchCount">4 kandidat</span></div><div class="match-summary"><span style="font-size:20px">ⓘ</span><div><b>Metode simulasi:</b> kesesuaian bidang (50%) + area preferensi (20%) + career interest (15%) + readiness (15%). Nilai harus dikalibrasi dan divalidasi HR sebelum digunakan.</div></div>
+          <div class="table-wrap"><table><thead><tr><th>Kandidat Demo</th><th>Bidang</th><th>Kesesuaian Area</th><th>Readiness</th><th>Match Score</th></tr></thead><tbody id="matchRows"></tbody></table></div>
+          <div class="footer-note">MOBILIS hanya mendukung shortlist awal. Sistem tidak memutuskan promosi atau mutasi secara otomatis dan tidak menggantikan Fit &amp; Proper, penilaian kompetensi resmi, atau kewenangan manajemen.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<script>
+const regionData = [
+  {name:'Jawa Timur',count:218,pct:87,note:'Minat tertinggi pada data demo.'},
+  {name:'Jawa Tengah',count:112,pct:45,note:'Minat sedang pada data demo.'},
+  {name:'Jawa Barat',count:88,pct:35,note:'Minat sedang pada data demo.'},
+  {name:'DKI Jakarta',count:64,pct:26,note:'Minat pada area kantor pusat.'},
+  {name:'Kalimantan',count:28,pct:11,note:'Area untuk dianalisis lebih lanjut.'},
+  {name:'Sulawesi',count:23,pct:9,note:'Data ilustratif untuk demonstrasi.'}
+];
+const candidateData = [
+  {name:'Talent A',initials:'TA',field:'Operasi',areas:['Jawa Timur','Jawa Tengah'],careers:['Operasi','Leadership / Management'],readiness:'Ready',base:95},
+  {name:'Talent B',initials:'TB',field:'Electrical',areas:['Jawa Timur','Jawa Barat'],careers:['Electrical','Engineering'],readiness:'Ready',base:91},
+  {name:'Talent C',initials:'TC',field:'Operasi',areas:['Jawa Tengah','DKI Jakarta'],careers:['Operasi','Technical Specialist'],readiness:'Consider',base:85},
+  {name:'Talent D',initials:'TD',field:'Maintenance',areas:['Kalimantan','Jawa Timur'],careers:['Maintenance','Electrical'],readiness:'Ready',base:88},
+  {name:'Talent E',initials:'TE',field:'Engineering',areas:['DKI Jakarta','Jawa Barat'],careers:['Engineering','Planning'],readiness:'Consider',base:82},
+  {name:'Talent F',initials:'TF',field:'Planning',areas:['Jawa Timur','Sulawesi'],careers:['Planning','Leadership / Management'],readiness:'Not Ready',base:79},
+  {name:'Talent G',initials:'TG',field:'Instrumentation & Control',areas:['Jawa Timur','Kalimantan'],careers:['Instrumentation & Control','Technical Specialist'],readiness:'Ready',base:87}
+];
+let profileSnapshot = null;
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(s => s.classList.toggle('active', s.id === page));
+  document.querySelectorAll('[data-page]').forEach(b => b.classList.toggle('active', b.dataset.page === page));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('[data-page]').forEach(btn => btn.addEventListener('click', () => navigate(btn.dataset.page)));
+document.querySelectorAll('.choice').forEach(btn => btn.addEventListener('click', () => btn.classList.toggle('selected')));
+function currentProfile() {
+  const getChoices = group => Array.from(document.querySelectorAll('[data-group="'+group+'"] .choice.selected')).map(b => b.textContent.trim());
+  return {name:document.getElementById('employeeName').value.trim(),func:document.getElementById('employeeFunction').value,readiness:document.getElementById('readiness').value,horizon:document.getElementById('horizon').value,areas:getChoices('areas'),careers:getChoices('careers'),aspiration:document.getElementById('aspiration').value,note:document.getElementById('profileNote').value.trim()};
+}
+document.getElementById('saveProfile').addEventListener('click', () => {
+  const p = currentProfile();
+  if (!p.name) { alert('Silakan isi nama tampilan. Gunakan nama dummy di preview ini.'); return; }
+  profileSnapshot = p;
+  const msg = document.getElementById('savedMsg');
+  msg.style.display = 'inline';
+  msg.textContent = '✓ Mobility Profile diperbarui untuk sesi demo ini.';
+  setTimeout(() => { msg.style.display = 'none'; }, 4000);
+});
+document.getElementById('resetProfile').addEventListener('click', () => {
+  document.getElementById('employeeName').value='Demo Employee';
+  document.getElementById('employeeFunction').value='Operasi';
+  document.getElementById('readiness').value='Consider';
+  document.getElementById('horizon').value='3–5 tahun';
+  document.getElementById('aspiration').value='Technical Specialist';
+  document.getElementById('profileNote').value='';
+  document.querySelectorAll('[data-group="areas"] .choice').forEach((b,i)=>b.classList.toggle('selected',i<2));
+  document.querySelectorAll('[data-group="careers"] .choice').forEach((b,i)=>b.classList.toggle('selected',i===0||i===2));
+  document.getElementById('savedMsg').style.display='none'; profileSnapshot=null;
+});
+function renderRegions() {
+  const box=document.getElementById('regionList');
+  box.innerHTML='';
+  regionData.forEach(r=>{
+    const card=document.createElement('button'); card.className='region-card'; card.type='button'; card.style.textAlign='left'; card.style.cursor='pointer'; card.innerHTML='<div class="region-name">'+r.name+'</div><div class="region-count">'+r.count+'</div><div class="region-foot">pilihan demo</div><div class="bar" style="margin-top:10px"><div class="bar-fill" style="width:'+r.pct+'%"></div></div>';
+    card.addEventListener('click',()=>{
+      document.getElementById('regionDetail').innerHTML='<div class="kpi-icon" style="width:42px;height:42px;margin-bottom:12px">⌖</div><h2 style="font-size:21px;margin-bottom:8px">'+r.name+'</h2><div style="font-size:32px;font-weight:850">'+r.count+'</div><p class="panel-desc">pilihan preferensi ilustratif</p><div class="bar" style="margin-top:18px"><div class="bar-fill" style="width:'+r.pct+'%"></div></div><p class="panel-desc" style="margin-top:14px">'+r.note+'</p>';
+    }); box.appendChild(card);
+  });
+}
+function statusMarkup(s) { let cls=s==='Ready'?'ready':s==='Consider'?'consider':'notready'; return '<span class="status '+cls+'">'+s.toUpperCase()+'</span>'; }
+function scoreCandidate(c, field, area) {
+  let score = c.base;
+  score += c.field===field ? 7 : (c.careers.includes(field) ? 3 : -9);
+  score += c.areas.includes(area) ? 4 : -3;
+  score += c.readiness==='Ready' ? 2 : c.readiness==='Consider' ? 0 : -8;
+  return Math.max(40,Math.min(99,score));
+}
+function drawCandidates() {
+  const field=document.getElementById('positionFunction').value;
+  const area=document.getElementById('positionArea').value;
+  const rows=candidateData.map(c=>({...c,score:scoreCandidate(c,field,area)})).sort((a,b)=>b.score-a.score).slice(0,5);
+  document.getElementById('matchRows').innerHTML=rows.map(c=>'<tr><td><div class="person"><div class="person-avatar">'+c.initials+'</div><div>'+c.name+'<div class="tag-small">Dummy / fiktif</div></div></div></td><td>'+c.field+'</td><td>'+(c.areas.includes(area)?'Sesuai':'Alternatif')+'</td><td>'+statusMarkup(c.readiness)+'</td><td class="score">'+c.score+'%</td></tr>').join('');
+  document.getElementById('matchCount').textContent=rows.length+' kandidat';
+  document.getElementById('matchCaption').textContent='Posisi: '+field+' • Area: '+area+' • Hasil dihitung dari data dummy.';
+}
+document.getElementById('runMatching').addEventListener('click', drawCandidates);
+renderRegions(); drawCandidates();
+</script>
+</body>
+</html>
